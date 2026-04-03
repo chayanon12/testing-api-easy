@@ -1,34 +1,24 @@
-import { createClient } from '@supabase/supabase-js';
 
-export default async function handler(req, res) {
-  try {
-    const supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY
-    );
 
-    const { data, error } = await supabase
-      .from('users')
-      .select('*');
+export default function handler(req, res) {
+  const { method } = req;
 
-    if (error) {
-      console.log("SUPABASE ERROR:", error);
-      return res.status(500).json({
-        message: "Supabase error",
-        error
-      });
-    }
-
+  if (method === 'GET') {
     return res.status(200).json({
-      success: true,
-      data
-    });
-
-  } catch (err) {
-    console.log("CATCH ERROR:", err);
-    return res.status(500).json({
-      message: "Catch error",
-      err: err.message
+      message: 'KUY 😎',
+      time: new Date().toISOString(),
+      query: req.query
     });
   }
+
+  if (method === 'POST') {
+    return res.status(200).json({
+      message: 'POST received 🚀',
+      body: req.body
+    });
+  }
+
+  return res.status(405).json({
+    error: 'Method not allowed'
+  });
 }
