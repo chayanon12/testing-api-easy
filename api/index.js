@@ -7,14 +7,28 @@ export default async function handler(req, res) {
       process.env.SUPABASE_ANON_KEY
     );
 
-    const result = await supabase.from('users').select('*');
+    const { data, error } = await supabase
+      .from('users')
+      .select('*');
 
-    console.log("RESULT:", result);
+    if (error) {
+      console.log("SUPABASE ERROR:", error);
+      return res.status(500).json({
+        message: "Supabase error",
+        error
+      });
+    }
 
-    return res.status(200).json(result);
+    return res.status(200).json({
+      success: true,
+      data
+    });
 
   } catch (err) {
     console.log("CATCH ERROR:", err);
-    return res.status(500).json({ err: err.message });
+    return res.status(500).json({
+      message: "Catch error",
+      err: err.message
+    });
   }
 }
