@@ -3,7 +3,7 @@ export default function handler(req, res) {
 
   if (method === 'GET') {
     return res.status(200).json({
-      message: 'HAHAHA Pond 😎',
+      message: 'KUY',
       time: new Date().toISOString(),
       query: req.query
     });
