@@ -1,20 +1,14 @@
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
-
 export default async function handler(req, res) {
-  if (req.method === 'GET') {
-    const { data, error } = await supabase
-      .from('users')
-      .select('*');
+  try {
+    console.log("ENV URL:", process.env.SUPABASE_URL);
+    console.log("ENV KEY:", process.env.SUPABASE_ANON_KEY);
 
-    if (error) return res.status(500).json({ error });
+    return res.status(200).json({
+      url: process.env.SUPABASE_URL,
+      key: process.env.SUPABASE_ANON_KEY ? "OK" : "MISSING"
+    });
 
-    return res.status(200).json(data);
+  } catch (err) {
+    return res.status(500).json({ err });
   }
-
-  return res.status(405).json({ error: 'Method not allowed' });
 }
