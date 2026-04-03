@@ -1,25 +1,20 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
-
 export default async function handler(req, res) {
   try {
-    const { data, error } = await supabase
-      .from('users')
-      .select('*');
+    const supabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
 
-    if (error) {
-      console.log("Supabase error:", error);
-      return res.status(500).json({ error });
-    }
+    const result = await supabase.from('users').select('*');
 
-    return res.status(200).json(data);
+    console.log("RESULT:", result);
+
+    return res.status(200).json(result);
 
   } catch (err) {
-    console.log("Catch error:", err);
-    return res.status(500).json({ err });
+    console.log("CATCH ERROR:", err);
+    return res.status(500).json({ err: err.message });
   }
 }
